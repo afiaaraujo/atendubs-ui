@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import ReceptionPage from './pages/ReceptionPage';
 import DisplayPage from './pages/DisplayPage';
-import { Sun, Moon, Tv, Users, LogIn } from 'lucide-react';
+import DoctorPage from './pages/DoctorPage';
+import { Sun, Moon, Tv, Users, LogIn, Stethoscope, LogOut } from 'lucide-react';
 
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem('theme') === 'dark';
   });
 
-  // Controla a tela ativa no navegador: 'recepcao' | 'painel' | 'login'
+  // Controla a tela ativa: 'recepcao' | 'painel' | 'medico' | 'login'
   const [currentScreen, setCurrentScreen] = useState('painel');
 
   useEffect(() => {
@@ -50,6 +51,19 @@ export default function App() {
           Recepção
         </button>
 
+        {/* Botão Médico / Profissional de Saúde */}
+        <button
+          onClick={() => setCurrentScreen('medico')}
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+            currentScreen === 'medico'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+          }`}
+        >
+          <Stethoscope size={14} />
+          Médico
+        </button>
+
         {/* Botão Painel TV */}
         <button
           onClick={() => setCurrentScreen('painel')}
@@ -86,10 +100,22 @@ export default function App() {
         >
           {isDark ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
         </button>
+
+        {/* Botão de Sair Geral (Aparece se não estiver na tela de Login) */}
+        {currentScreen !== 'login' && (
+          <button
+            onClick={handleLogout}
+            className="p-1.5 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-all"
+            title="Sair do sistema"
+          >
+            <LogOut size={16} />
+          </button>
+        )}
       </div>
 
       {/* Renderização Condicional */}
-      {currentScreen === 'recepcao' && <ReceptionPage onLogout={handleLogout} />}
+      {currentScreen === 'recepcao' && <ReceptionPage />}
+      {currentScreen === 'medico' && <DoctorPage />}
       {currentScreen === 'painel' && <DisplayPage />}
       {currentScreen === 'login' && (
         <div className="min-h-screen flex items-center justify-center p-4">

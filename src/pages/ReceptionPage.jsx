@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import PatientForm from '../components/PatientForm';
 import WaitingQueueTable from '../components/WaitingQueueTable';
 
-export default function ReceptionPage({ onLogout }) {
+export default function ReceptionPage() {
   // Dados iniciais baseados na imagem do protótipo
   const [patients, setPatients] = useState([
     { id: 1, senha: '001', nome: 'João Silva', cpf: '000.000.000-00', prioridade: 'Geral', status: 'Aguardando' },
@@ -33,8 +33,8 @@ export default function ReceptionPage({ onLogout }) {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col transition-colors">
-      {/* O Header recebe o callback onLogout para redirecionar ao deslogar */}
-      <Header onLogout={onLogout} />
+      {/* Header limpo, sem responsabilidade de logout */}
+      <Header />
       
       <main className="flex-1 p-6 grid grid-cols-1 md:grid-cols-12 gap-6 max-w-7xl w-full mx-auto">
         {/* Coluna Esquerda: Formulário (4 colunas) */}

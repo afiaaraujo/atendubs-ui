@@ -1,7 +1,7 @@
 import React from 'react';
-import { Plus, LogOut } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
-export default function Header({ onLogout }) {
+export default function Header() {
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between transition-colors">
       {/* Lado Esquerdo: Logo e Título */}
@@ -18,17 +18,6 @@ export default function Header({ onLogout }) {
           </p>
         </div>
       </div>
-
-      {/* Lado Direito: Botão Sair afastado da borda pra não bater no ícone do Tema */}
-      <button
-        type="button"
-        onClick={onLogout}
-        className="mr-14 flex items-center gap-2 px-3.5 py-2 rounded-full bg-white dark:bg-slate-800 text-red-600 dark:text-red-400 font-bold text-xs shadow-md border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-red-950/50 transition-all whitespace-nowrap"
-        title="Encerrar sessão"
-      >
-        <LogOut size={16} />
-        <span>Sair</span>
-      </button>
     </header>
   );
 }
