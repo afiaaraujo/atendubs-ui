@@ -1,7 +1,15 @@
 import React from 'react';
 import { Megaphone } from 'lucide-react';
+import Badge from './Badge';
 
 export default function NextPatientCard({ patient, onCallNext }) {
+  const isPreferencial =
+    patient &&
+    (patient.prioridade === 'PREFERENCIAL' ||
+      patient.prioridade === 'Preferencial' ||
+      patient.prioridade === 'PRIORITÁRIO' ||
+      patient.prioridade === 'Prioritário');
+
   return (
     <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
       <div>
@@ -14,9 +22,10 @@ export default function NextPatientCard({ patient, onCallNext }) {
               {patient.nome}
             </h2>
             <div className="flex items-center gap-2 mb-6">
-              <span className="bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-xs font-bold px-3 py-1 rounded-full border border-red-200 dark:border-red-900/50">
+              {/* BADGE DINÂMICO DE PRIORIDADE */}
+              <Badge variant={isPreferencial ? 'preferencial' : 'geral'}>
                 {patient.prioridade}
-              </span>
+              </Badge>
               <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                 Senha {patient.senha || patient.id}
               </span>

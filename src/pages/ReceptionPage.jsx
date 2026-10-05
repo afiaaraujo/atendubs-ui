@@ -7,8 +7,8 @@ export default function ReceptionPage() {
   // Dados iniciais baseados na imagem do protótipo
   const [patients, setPatients] = useState([
     { id: 1, senha: '001', nome: 'João Silva', cpf: '000.000.000-00', prioridade: 'Geral', status: 'Aguardando' },
-    { id: 2, senha: '002', nome: 'Maria Santos', cpf: '000.000.000-00', prioridade: 'Preferencial', status: 'Aguardando' },
-    { id: 3, senha: '003', nome: 'José Alves', cpf: '000.000.000-00', prioridade: 'Geral', status: 'Aguardando' },
+    { id: 2, senha: '002', nome: 'Maria Santos', cpf: '000.000.000-00', prioridade: 'Preferencial', status: 'Em Atendimento' },
+    { id: 3, senha: '003', nome: 'José Alves', cpf: '000.000.000-00', prioridade: 'Geral', status: 'Concluído' },
   ]);
 
   const handleAddPatient = (newPt) => {

@@ -3,14 +3,15 @@ import LoginPage from './pages/LoginPage';
 import ReceptionPage from './pages/ReceptionPage';
 import DisplayPage from './pages/DisplayPage';
 import DoctorPage from './pages/DoctorPage';
-import { Sun, Moon, Tv, Users, LogIn, Stethoscope, LogOut } from 'lucide-react';
+import DashboardPage from './pages/DashboardPage';
+import { Sun, Moon, Tv, Users, LogIn, Stethoscope, LogOut, BarChart3 } from 'lucide-react';
 
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem('theme') === 'dark';
   });
 
-  // Controla a tela ativa: 'recepcao' | 'painel' | 'medico' | 'login'
+  // Controla a tela ativa: 'recepcao' | 'painel' | 'medico' | 'dashboard' | 'login'
   const [currentScreen, setCurrentScreen] = useState('painel');
 
   useEffect(() => {
@@ -77,6 +78,19 @@ export default function App() {
           Painel TV
         </button>
 
+        {/* Botão Gestor / Dashboard */}
+        <button
+          onClick={() => setCurrentScreen('dashboard')}
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+            currentScreen === 'dashboard'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+          }`}
+        >
+          <BarChart3 size={14} />
+          Dashboard
+        </button>
+
         {/* Botão Login */}
         <button
           onClick={() => setCurrentScreen('login')}
@@ -101,7 +115,7 @@ export default function App() {
           {isDark ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
         </button>
 
-        {/* Botão de Sair Geral (Aparece se não estiver na tela de Login) */}
+        {/* Botão de Sair Geral */}
         {currentScreen !== 'login' && (
           <button
             onClick={handleLogout}
@@ -117,6 +131,7 @@ export default function App() {
       {currentScreen === 'recepcao' && <ReceptionPage />}
       {currentScreen === 'medico' && <DoctorPage />}
       {currentScreen === 'painel' && <DisplayPage />}
+      {currentScreen === 'dashboard' && <DashboardPage />}
       {currentScreen === 'login' && (
         <div className="min-h-screen flex items-center justify-center p-4">
           <LoginPage onLogin={handleLogin} />

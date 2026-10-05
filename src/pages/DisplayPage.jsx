@@ -8,7 +8,7 @@ export default function DisplayPage({ currentCall, lastCalls = [] }) {
   const activeCall = currentCall || {
     nome: 'MARIA SANTOS',
     senha: 'P002',
-    prioridade: 'PREFERENCIAL',
+    prioridade: 'GERAL',
     consultorio: 'CONSULTÓRIO 02',
   };
 

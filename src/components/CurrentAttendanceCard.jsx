@@ -1,14 +1,17 @@
 import React from 'react';
 import { CheckCircle2, Clock } from 'lucide-react';
+import Badge from './Badge';
 
 export default function CurrentAttendanceCard({ patient, onFinish }) {
   return (
     <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-            EM ATENDIMENTO
-          </span>
+          {/* BADGE DE STATUS DA CONSULTA */}
+          <Badge variant="info">
+            Em Atendimento
+          </Badge>
+
           {patient && (
             <span className="flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-md">
               <Clock size={12} />
@@ -19,10 +22,10 @@ export default function CurrentAttendanceCard({ patient, onFinish }) {
 
         {patient ? (
           <>
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white my-2">
               {patient.nome}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 font-medium">
               No {patient.consultorio || 'Consultório 02'} (Senha {patient.senha || patient.id})
             </p>
           </>

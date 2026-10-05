@@ -1,6 +1,21 @@
 import React from 'react';
+import Badge from './Badge';
 
 export default function WaitingQueueTable({ patients = [], onCallPatient }) {
+  // Função auxiliar para mapear o status do paciente para a variante correta do Badge
+  const getStatusVariant = (status) => {
+    switch (status) {
+      case 'Em Atendimento':
+        return 'info';      // Azul
+      case 'Concluído':
+      case 'Atendido':
+        return 'success';   // Verde
+      case 'Aguardando':
+      default:
+        return 'warning';   // Amarelo
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex flex-col h-full transition-colors">
       {/* Cabeçalho da Tabela */}
@@ -9,7 +24,7 @@ export default function WaitingQueueTable({ patients = [], onCallPatient }) {
           <h2 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wide">
             PACIENTES AGUARDANDO
           </h2>
-           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
             Lista de pacientes na fila de triagem
           </p>
         </div>
@@ -34,6 +49,8 @@ export default function WaitingQueueTable({ patients = [], onCallPatient }) {
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {patients.map((pt) => {
               const isPrioritario = pt.prioridade === 'Prioritário' || pt.prioridade === 'Preferencial';
+              const statusAtual = pt.status || 'Aguardando';
+
               return (
                 <tr key={pt.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
                   <td className="py-3 px-2 font-bold text-slate-700 dark:text-slate-300">
@@ -45,20 +62,21 @@ export default function WaitingQueueTable({ patients = [], onCallPatient }) {
                   <td className="py-3 px-2 text-slate-400 dark:text-slate-500">
                     {pt.cpf}
                   </td>
+                  
+                  {/* BADGE DE PRIORIDADE */}
                   <td className="py-3 px-2">
-                    <span
-                      className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        isPrioritario
-                          ? 'bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400'
-                          : 'bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400'
-                      }`}
-                    >
+                    <Badge variant={isPrioritario ? 'preferencial' : 'geral'}>
                       {pt.prioridade}
-                    </span>
+                    </Badge>
                   </td>
-                  <td className="py-3 px-2 text-slate-500 dark:text-slate-400 font-medium">
-                    {pt.status || 'Aguardando'}
+
+                  {/* BADGE DE STATUS DINÂMICO */}
+                  <td className="py-3 px-2">
+                    <Badge variant={getStatusVariant(statusAtual)}>
+                      {statusAtual}
+                    </Badge>
                   </td>
+
                   <td className="py-3 px-2 text-right">
                     <button
                       onClick={() => onCallPatient && onCallPatient(pt.id)}
