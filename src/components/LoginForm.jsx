@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { User, Lock, Eye, EyeOff, Plus, ShieldCheck, KeyRound, X } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, Plus, ShieldCheck, KeyRound, X, Loader2 } from 'lucide-react';
 
-export default function LoginForm({ onLogin }) {
+export default function LoginForm({ onLogin, isSubmitting = false }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [credentials, setCredentials] = useState({ usuario: '', senha: '' });
@@ -13,6 +13,7 @@ export default function LoginForm({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Bloqueio extra contra clique duplo
     if (onLogin) onLogin(credentials);
   };
 
@@ -45,8 +46,9 @@ export default function LoginForm({ onLogin }) {
               name="usuario"
               value={credentials.usuario}
               onChange={handleChange}
+              disabled={isSubmitting}
               placeholder="Digite seu CPF ou usuário"
-              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all disabled:opacity-60"
               required
             />
           </div>
@@ -64,14 +66,16 @@ export default function LoginForm({ onLogin }) {
               name="senha"
               value={credentials.senha}
               onChange={handleChange}
+              disabled={isSubmitting}
               placeholder="Digite sua senha de acesso"
-              className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+              className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all disabled:opacity-60"
               required
             />
             <button
               type="button"
+              disabled={isSubmitting}
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="absolute right-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors disabled:opacity-60"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -81,9 +85,17 @@ export default function LoginForm({ onLogin }) {
         {/* Botão Entrar */}
         <button
           type="submit"
-          className="w-full mt-2 py-3 bg-[#005296] hover:bg-[#004077] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold rounded-lg text-sm shadow-md transition-all uppercase tracking-wider"
+          disabled={isSubmitting}
+          className="w-full mt-2 py-3 bg-[#005296] hover:bg-[#004077] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold rounded-lg text-sm shadow-md transition-all uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
-          ENTRAR
+          {isSubmitting ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              <span>ENTRANDO...</span>
+            </>
+          ) : (
+            <span>ENTRAR</span>
+          )}
         </button>
       </form>
 

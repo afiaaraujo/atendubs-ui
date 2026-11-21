@@ -1,9 +1,19 @@
 import { useEffect } from 'react';
 
 export default function AudioAlert({ triggerKey }) {
-  const playBeep = () => {
+  useEffect(() => {
+    if (!triggerKey) return;
+
+    let audioCtx;
+    let closeTimer;
+
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
 
       const playNote = (freq, startTime, duration) => {
         const osc = audioCtx.createOscillator();
@@ -21,15 +31,20 @@ export default function AudioAlert({ triggerKey }) {
       const now = audioCtx.currentTime;
       playNote(523.25, now, 0.3);       // Nota C5
       playNote(659.25, now + 0.25, 0.4); // Nota E5
+
+      closeTimer = setTimeout(() => {
+        audioCtx.close().catch(() => {});
+      }, 900);
     } catch (e) {
       console.warn('Erro ao tocar áudio:', e);
     }
-  };
 
-  useEffect(() => {
-    if (triggerKey) {
-      playBeep();
-    }
+    return () => {
+      if (closeTimer) clearTimeout(closeTimer);
+      if (audioCtx && audioCtx.state !== 'closed') {
+        audioCtx.close().catch(() => {});
+      }
+    };
   }, [triggerKey]);
 
   return null; // Componente invisível

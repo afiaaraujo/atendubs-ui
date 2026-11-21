@@ -13,6 +13,14 @@ export default function App() {
 
   // Controla a tela ativa: 'recepcao' | 'painel' | 'medico' | 'dashboard' | 'login'
   const [currentScreen, setCurrentScreen] = useState('painel');
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('atendubs_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,24 +33,25 @@ export default function App() {
     }
   }, [isDark]);
 
-  const handleLogin = () => {
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
     setCurrentScreen('recepcao');
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('atendubs_user');
+    setCurrentUser(null);
     setCurrentScreen('login');
   };
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 relative">
-      
       {/* Menu de Navegação Rápida no topo */}
       <div className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-1.5 rounded-full shadow-lg border border-slate-200 dark:border-slate-700">
-        
         {/* Botão Recepção */}
         <button
           onClick={() => setCurrentScreen('recepcao')}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentScreen === 'recepcao'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -55,7 +64,7 @@ export default function App() {
         {/* Botão Médico / Profissional de Saúde */}
         <button
           onClick={() => setCurrentScreen('medico')}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentScreen === 'medico'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -68,7 +77,7 @@ export default function App() {
         {/* Botão Painel TV */}
         <button
           onClick={() => setCurrentScreen('painel')}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentScreen === 'painel'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -81,7 +90,7 @@ export default function App() {
         {/* Botão Gestor / Dashboard */}
         <button
           onClick={() => setCurrentScreen('dashboard')}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentScreen === 'dashboard'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -94,7 +103,7 @@ export default function App() {
         {/* Botão Login */}
         <button
           onClick={() => setCurrentScreen('login')}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
+          className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
             currentScreen === 'login'
               ? 'bg-blue-600 text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
@@ -109,7 +118,7 @@ export default function App() {
         {/* Alternar Tema */}
         <button
           onClick={() => setIsDark(!isDark)}
-          className="p-1.5 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
+          className="p-1.5 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all cursor-pointer"
           title="Alternar tema"
         >
           {isDark ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} />}
@@ -119,7 +128,7 @@ export default function App() {
         {currentScreen !== 'login' && (
           <button
             onClick={handleLogout}
-            className="p-1.5 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-all"
+            className="p-1.5 rounded-full text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-all cursor-pointer"
             title="Sair do sistema"
           >
             <LogOut size={16} />
@@ -128,13 +137,13 @@ export default function App() {
       </div>
 
       {/* Renderização Condicional */}
-      {currentScreen === 'recepcao' && <ReceptionPage />}
-      {currentScreen === 'medico' && <DoctorPage />}
+      {currentScreen === 'recepcao' && <ReceptionPage user={currentUser} />}
+      {currentScreen === 'medico' && <DoctorPage user={currentUser} />}
       {currentScreen === 'painel' && <DisplayPage />}
-      {currentScreen === 'dashboard' && <DashboardPage />}
+      {currentScreen === 'dashboard' && <DashboardPage user={currentUser} />}
       {currentScreen === 'login' && (
         <div className="min-h-screen flex items-center justify-center p-4">
-          <LoginPage onLogin={handleLogin} />
+          <LoginPage onLoginSuccess={handleLoginSuccess} />
         </div>
       )}
     </div>
